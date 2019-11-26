@@ -3,7 +3,7 @@ export default {
   user: {
     login: credentials =>
       axios
-        .post("https://e-hallpass.app/api/v5/login", credentials)
+        .post("https://ehp.app/api/v5/login", credentials)
         .then(res => res.data)
   },
   epass: {

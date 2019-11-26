@@ -1,7 +1,7 @@
 import React  from "react";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from "yup";
-import axios from "axios";
+import api from '../_helpers/api';
 
 export default function LoginForm() {
 
@@ -16,7 +16,22 @@ export default function LoginForm() {
           email: Yup.string().required('Email is required'),
           password: Yup.string().required('Password is required')
       })}
-      onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
+      onSubmit={({email, password}, { setStatus, setSubmitting }) => {
+
+        api.user.login(email, password).then(user => {
+          if (user.success === true) {
+            localStorage.userInfo = user.data.token;
+         //   setAuthorizationHeader(user.data.token);
+          
+          } else {
+            setSubmitting(false);
+          }
+        },
+        error => {
+                      setSubmitting(false);
+                      setStatus(error);
+                  }
+        );        
           // authenticationService.login(username, password)
           //     .then(
           //         user => {
@@ -44,7 +59,7 @@ export default function LoginForm() {
           <ErrorMessage name="password" component="div" className="invalid-feedback" />
         </div>
         <div className="form-group">
-          <button
+          <button 
             className="btn btn-primary btn-submit border-0 w-100 mt-2"
             disabled={isSubmitting}
           >
